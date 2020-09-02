@@ -1,0 +1,11 @@
+.expandedWrapper {
+  table {
+    colgroup {
+      :first-child {
+        width: 100px;
+      }
+    }
+  }
+}
+
+

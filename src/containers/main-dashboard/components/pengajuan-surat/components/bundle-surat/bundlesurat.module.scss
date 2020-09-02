@@ -1,0 +1,16 @@
+.bundleContainer {
+  width: 100%;
+
+  // .bundleLeft {
+  // }
+  .bundleRight {
+    display: flex;
+    gap: 10px;
+
+    > * {
+      flex: 1;
+    }
+  }
+}
+
+

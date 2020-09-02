@@ -1,0 +1,24 @@
+.status {
+  font-size: 12px;
+
+  p {
+    margin-top: 5px;
+  }
+}
+
+.expandedWrapper {
+  table {
+    colgroup {
+      :first-child {
+        width: 100px;
+      }
+    }
+  }
+}
+
+.actionField {
+  display: flex;
+  justify-content: space-between;
+}
+
+
