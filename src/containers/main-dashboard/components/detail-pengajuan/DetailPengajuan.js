@@ -7,15 +7,15 @@ import {
 const { Option } = Select;
 const { TextArea } = Input;
 
-const DetailPengajuan = ({ datas }) => {
+const DetailPengajuan = ({ datas, setDataSurat, idx, dataSurat }) => {
   const [visible, setVisible] = useState(false);
-  const [data, setData] = useState('');
+  const [status, setStatus] = useState('');
   const [rev, setRev] = useState('');
   const [nosurat, setNosurat] = useState('');
   const [penerima, setPenerima] = useState('');
 
   useEffect(() => {
-    setData(datas.status.status);
+    setStatus(datas.status.status);
     setRev(datas.status.revisi);
     setNosurat(datas.nosurat);
     setPenerima(datas.penerima);
@@ -40,23 +40,42 @@ const DetailPengajuan = ({ datas }) => {
         <div>
           <Form
             layout='vertical'
-            onFinish={() => setVisible(false)}
+            onFinish={() => {
+              setDataSurat(state => state.map((val, i) => {
+                if (i === idx) {
+                  return {
+                    ...val,
+                    status: {
+                      ...val.status,
+                      status: status,
+                      revisi: rev
+                    },
+                    nosurat: nosurat,
+                    penerima: penerima
+                  }
+                } else {
+                  return val
+                }
+              }))
+              setVisible(false)
+            }}
           >
             <Form.Item
               name="nosurat"
               label="Nomor Surat"
+              initialValue={nosurat}
             >
-              <Input placeholder="Nomor Surat" defaultValue={nosurat} value={nosurat} onChange={e => setNosurat(e.target.value)} />
+              <Input placeholder="Nomor Surat" value={nosurat} onChange={e => setNosurat(e.target.value)} />
             </Form.Item>
             <Form.Item
               name="penerima"
               label="Penerima"
+              initialValue={penerima}
             >
               <Select
                 placeholder='Pilih'
                 onChange={val => setPenerima(val)}
                 value={penerima}
-                defaultValue={penerima}
               >
                 <Option value="internal">Internal</Option>
                 <Option value="eksternal">Eksternal</Option>
@@ -65,12 +84,12 @@ const DetailPengajuan = ({ datas }) => {
             <Form.Item
               name="status"
               label="Status"
+              initialValue={status}
             >
               <Select
                 placeholder='Pilih'
-                onChange={val => setData(val)}
-                value={data}
-                defaultValue={data}
+                onChange={val => setStatus(val)}
+                value={status}
               >
                 <Option value="Diterima">Terima</Option>
                 <Option value="Ditolak">Tolak</Option>
@@ -80,7 +99,7 @@ const DetailPengajuan = ({ datas }) => {
             <Form.Item
               name="revisi"
               label="Revisi"
-              rules={data === 'Revisi' && [
+              rules={status === 'Revisi' && [
                 {
                   required: true,
                   message: 'Tuliskan revisi terlebih dahulu!',
@@ -88,7 +107,7 @@ const DetailPengajuan = ({ datas }) => {
               ]}
             >
               <TextArea
-                disabled={data !== 'Revisi'}
+                disabled={status !== 'Revisi'}
                 value={rev}
                 onChange={e => setRev(e.target.value)}
                 placeholder='Tambahkan Revisi'

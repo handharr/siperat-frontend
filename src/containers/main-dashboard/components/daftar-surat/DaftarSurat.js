@@ -1,11 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Tag, Button } from 'antd';
-import styles from './daftarpengajuan.module.scss';
-import {
-  DeleteFilled,
-  SnippetsFilled
-} from '@ant-design/icons';
-import DetailPengajuan from '../detail-pengajuan';
+import React, { useState } from 'react';
+import styles from './daftarsurat.module.scss';
+import { Table, Tag } from 'antd';
 
 const dataSource = [
   {
@@ -56,25 +51,6 @@ const dataSource = [
   },
 ];
 
-const Status = ({ val, tgl }) => {
-  let color = '';
-
-  if (val === 'Diterima') {
-    color = 'success'
-  } else if (val === 'Ditolak') {
-    color = 'error'
-  } else {
-    color = 'warning'
-  }
-
-  return (
-    <div className={styles.status}>
-      <Tag color={color}>{val}</Tag>
-      <p> {tgl} </p>
-    </div>
-  )
-}
-
 const expandedRowRender = ({ expand, status }) => {
   return (
     <div className={styles.expandedWrapper}>
@@ -114,8 +90,8 @@ const expandedRowRender = ({ expand, status }) => {
   )
 }
 
-const DaftarPengajuan = () => {
-  const [dataSurat, setDataSurat] = useState(dataSource);
+const DaftarSurat = () => {
+  const [data, setData] = useState(dataSource)
 
   const columns = [
     {
@@ -139,13 +115,7 @@ const DaftarPengajuan = () => {
       key: 'nosurat',
       fixed: 'left',
       width: 300,
-      render: text => text === '' ? <b>--Belum Disetujui--</b> : text
-    },
-    {
-      title: 'Pemohon',
-      dataIndex: 'pemohon',
-      key: 'pemohon',
-      width: 200
+      render: text => text === '' ? <b>--Belum Disetujui--</b> : text,
     },
     {
       title: 'Jenis',
@@ -174,47 +144,32 @@ const DaftarPengajuan = () => {
       render: text => text.toUpperCase(),
       width: 100
     },
-    {
-      title: 'Action',
-      key: 'operation',
-      width: 100,
-      fixed: 'right',
-      align: 'center',
-      render: (t, record, index) => {
-        return (
-          <div className={styles.actionField}>
-            <DetailPengajuan
-              datas={record}
-              dataSurat={dataSurat}
-              setDataSurat={setDataSurat}
-              idx={index}
-            />
-            <Button
-              icon={<DeleteFilled />}
-              shape='circle'
-              size='small'
-              danger
-              onClick={() => { setDataSurat(state => state.filter((val, i) => i !== index)) }}
-            />
-            <Button
-              shape='circle'
-              size='small'
-            >
-              <a href={record.link}>
-                <SnippetsFilled />
-              </a>
-            </Button>
-          </div>
-        )
-      }
-    }
   ];
+
+  const Status = ({ val, tgl }) => {
+    let color = '';
+
+    if (val === 'Diterima') {
+      color = 'success'
+    } else if (val === 'Ditolak') {
+      color = 'error'
+    } else {
+      color = 'warning'
+    }
+
+    return (
+      <div className={styles.status}>
+        <Tag color={color}>{val}</Tag>
+        <p> {tgl} </p>
+      </div>
+    )
+  }
 
   return (
     <div>
-      <p><b>Admin Only</b></p>
+      <p><b>Admin/User</b></p>
       <Table
-        dataSource={dataSurat}
+        dataSource={data}
         columns={columns}
         expandable={{ expandedRowRender }}
         scroll={{ x: 1275 }}
@@ -223,6 +178,5 @@ const DaftarPengajuan = () => {
   )
 }
 
-export default DaftarPengajuan;
-
+export default DaftarSurat;
 
