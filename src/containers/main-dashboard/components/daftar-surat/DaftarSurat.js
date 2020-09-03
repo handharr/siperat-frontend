@@ -91,7 +91,7 @@ const expandedRowRender = ({ expand, status }) => {
 }
 
 const DaftarSurat = () => {
-  const [data, setData] = useState(dataSource)
+  const [data,] = useState(dataSource)
 
   const columns = [
     {

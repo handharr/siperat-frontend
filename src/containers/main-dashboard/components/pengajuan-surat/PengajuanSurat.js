@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './pengajuansurat.module.scss';
 import { Form, Select, Input, Button, Table, message } from 'antd';
 import { listOption } from '../../../../configs';
@@ -88,7 +88,13 @@ const PengajuanSurat = () => {
         return (
           <>
             <BundleSurat record={record} idx={index} setBundle={setBundle} />
-            <Button type='link' danger >Delete</Button>
+            <Button
+              type='link'
+              danger
+              onClick={() => { setBundle(state => state.filter((val, i) => i !== index)) }}
+            >
+              Delete
+            </Button>
           </>
         )
       }

@@ -3,6 +3,7 @@ import styles from './login.module.scss';
 import { Input, Form, Button, Avatar } from 'antd';
 import { ImageBundle } from '../../assets'
 import { useHistory } from 'react-router-dom';
+import BukuTamu from './components/buku-tamu/BukuTamu';
 
 const { LogoBem } = ImageBundle
 
@@ -19,7 +20,7 @@ const Login = () => {
           <h3>Login Siperat</h3>
           <Form
             layout='vertical'
-            onFinish = {() => history.push('/dashboard')}
+            onFinish={() => history.push('/dashboard')}
           >
             <Form.Item
               name="nim"
@@ -51,6 +52,9 @@ const Login = () => {
                 </Button>
             </Form.Item>
           </Form>
+          <div style={{width:205}}>
+            <BukuTamu />
+          </div>
         </div>
       </div>
     </div>

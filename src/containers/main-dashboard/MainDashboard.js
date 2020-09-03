@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './main.module.scss';
-import { Menu, Layout, Breadcrumb } from 'antd';
+import { Menu, Layout } from 'antd';
 import { useHistory, Switch, Route } from 'react-router-dom';
 import { DaftarPengajuan, PengajuanSurat, DaftarSurat } from './components';
 import {
@@ -10,7 +10,7 @@ import {
   FormOutlined,
 } from '@ant-design/icons';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 
 const MainDashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
