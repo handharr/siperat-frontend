@@ -1,70 +1,30 @@
-import React, { useState } from 'react';
-import { Table, Tag, Button } from 'antd';
-import styles from './daftarpengajuan.module.scss';
+import React, { useState } from 'react'; // import react
+import { Table, Tag, Button, Tooltip } from 'antd'; // import antd components
+import styles from './daftarpengajuan.module.scss'; //import scss style
 import {
   DeleteFilled,
   SnippetsFilled
-} from '@ant-design/icons';
-import DetailPengajuan from '../detail-pengajuan';
+} from '@ant-design/icons'; // import antd icon components
+import DetailPengajuan from '../detail-pengajuan/DetailPengajuan'; // import local component
+import { dummyData, listOption } from '../../../../configs'; // import configs
 
-const dataSource = [
-  {
-    key: '1',
-    nomor: 1,
-    nosurat: 'faekdnfkadnfkdlnlfnalkenfkefdmfalkse',
-    pemohon: 'Mike',
-    jenis: 'undangan',
-    penerima: 'eksternal',
-    acara: 'PK2MABA',
-    pengirim: 'psdm',
-    link: '',
-    status: {
-      status: 'Diterima',
-      tgl: '22-08-2020',
-      revisi: '',
-      admin: 'Puras Handharmahua'
-    },
-    expand: {
-      kepada: 'Dummy',
-      lampiran: 'Dummy',
-      hal: 'Dummy',
-      keterangan: 'Dummy',
-    }
-  },
-  {
-    key: '2',
-    nomor: 2,
-    nosurat: '',
-    pemohon: 'John',
-    jenis: 'permohonan',
-    penerima: 'internal',
-    acara: 'Hology',
-    link: '',
-    pengirim: 'k2p',
-    status: {
-      status: 'Revisi',
-      tgl: '22-08-2020',
-      revisi: " Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.  ",
-      admin: 'Puras Handharmahua'
-    },
-    expand: {
-      kepada: 'Dummy',
-      lampiran: 'Dummy',
-      hal: 'Dummy',
-      keterangan: 'Dummy',
-    }
-  },
-];
-
-const Status = ({ val, tgl }) => {
+/**
+ * return status and date to replace Status cell rendering
+ * 
+ * @param {string} val 
+ * @param {string} tgl 
+ */
+const status = (val, tgl) => {
   let color = '';
 
   if (val === 'Diterima') {
     color = 'success'
   } else if (val === 'Ditolak') {
     color = 'error'
-  } else {
+  } else if (val === 'Revisi') {
     color = 'warning'
+  } else {
+    color = 'processing'
   }
 
   return (
@@ -75,6 +35,11 @@ const Status = ({ val, tgl }) => {
   )
 }
 
+/**
+ * component to replace expanded row rendering display some of data
+ * 
+ * @param {object} param1 destructuring
+ */
 const expandedRowRender = ({ expand, status }) => {
   return (
     <div className={styles.expandedWrapper}>
@@ -114,30 +79,40 @@ const expandedRowRender = ({ expand, status }) => {
   )
 }
 
-const DaftarPengajuan = () => {
-  const [dataSurat, setDataSurat] = useState(dataSource);
-
-  const columns = [
+/**
+ * passing parameter to column definition
+ * 
+ * @param {function} setDataSurat setState function
+ */
+const tableColumns = (setDataSurat) => {
+  return [
     {
       title: 'No.',
       dataIndex: 'nomor',
       key: 'no',
       width: 75,
-      fixed: 'left'
+      fixed: window.innerWidth > 768 ? 'left' : null,
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
       width: 100,
-      fixed: 'left',
-      render: record => <Status val={record.status} tgl={record.tgl} />
+      fixed: window.innerWidth > 768 ? 'left' : null,
+      render: record => status(record.status, record.tgl),
+      onFilter: (val, { status }) => val === status.status,
+      filters: [
+        { value: 'Diterima', text: 'Diterima' },
+        { value: 'Ditolak', text: 'Ditolak' },
+        { value: 'Revisi', text: 'Revisi' },
+        { value: 'Proses', text: 'Proses' },
+      ],
     },
     {
       title: 'No Surat',
       dataIndex: 'nosurat',
       key: 'nosurat',
-      fixed: 'left',
+      fixed: window.innerWidth > 768 ? 'left' : null,
       width: 300,
       render: text => text === '' ? <b>--Belum Disetujui--</b> : text
     },
@@ -152,14 +127,19 @@ const DaftarPengajuan = () => {
       dataIndex: 'jenis',
       key: 'jenis',
       render: text => text[0].toUpperCase() + text.slice(1),
-      width: 150
+      width: 150,
+      filters: listOption.listJenisSurat
     },
     {
       title: 'Penerima',
       dataIndex: 'penerima',
       key: 'penerima',
       render: text => text[0].toUpperCase() + text.slice(1),
-      width: 100
+      width: 100,
+      filters: [
+        { value: 'internal', text: 'Internal' },
+        { value: 'eksternal', text: 'Eksternal' },
+      ],
     },
     {
       title: 'Acara',
@@ -172,12 +152,13 @@ const DaftarPengajuan = () => {
       dataIndex: 'pengirim',
       key: 'pengirim',
       render: text => text.toUpperCase(),
-      width: 100
+      width: 100,
+      filters: listOption.listPengirim
     },
     {
-      title: 'Action',
+      title: window.innerWidth > 768 ? 'Action' : 'Act',
       key: 'operation',
-      width: 100,
+      width: window.innerWidth > 768 ? 100 : 50,
       fixed: 'right',
       align: 'center',
       render: (t, record, index) => {
@@ -185,39 +166,51 @@ const DaftarPengajuan = () => {
           <div className={styles.actionField}>
             <DetailPengajuan
               datas={record}
-              dataSurat={dataSurat}
               setDataSurat={setDataSurat}
               idx={index}
             />
-            <Button
-              icon={<DeleteFilled />}
-              shape='circle'
-              size='small'
-              danger
-              onClick={() => { setDataSurat(state => state.filter((val, i) => i !== index)) }}
-            />
-            <Button
-              shape='circle'
-              size='small'
-            >
-              <a href={record.link}>
-                <SnippetsFilled />
-              </a>
-            </Button>
+            <Tooltip placement='top' title='Hapus Surat' >
+              <Button
+                icon={<DeleteFilled />}
+                shape='circle'
+                size='small'
+                danger
+                onClick={() => { setDataSurat(state => state.filter((val, i) => i !== index)) }}
+              />
+            </Tooltip>
+            <Tooltip placement='bottom' title='Go to file' >
+              <Button
+                shape='circle'
+                size='small'
+              >
+                <a href={record.link}>
+                  <SnippetsFilled />
+                </a>
+              </Button>
+            </Tooltip>
           </div>
         )
       }
     }
   ];
+}
+
+/**
+ * component that return daftar pengajuan table
+ */
+const DaftarPengajuan = () => {
+  const [dataSurat, setDataSurat] = useState(dummyData); // data -> array of object
+
+  console.log('Daftar Pengajuan Rendered');
 
   return (
     <div>
       <p><b>Admin Only</b></p>
       <Table
         dataSource={dataSurat}
-        columns={columns}
+        columns={tableColumns(setDataSurat)}
         expandable={{ expandedRowRender }}
-        scroll={{ x: 1275 }}
+        scroll={{ x: 1500 }}
       />
     </div>
   )

@@ -1,25 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form, Select, Input } from 'antd';
-import { listOption } from '../../../../../../configs';
-import styles from './bundlesurat.module.scss';
+import React, { useState } from 'react'; // import React
+import { Modal, Button, Form, Select, Input } from 'antd'; // import antd components
+import { listOption } from '../../../../../../configs'; // import configs
+import styles from './bundlesurat.module.scss'; // import scss stylesheet
 
-const { Option } = Select;
+const { Option } = Select; // destructuring Select antd component
 
+
+/**
+ * display form to edit temporary of each letters
+ * 
+ * @param {object} param1 
+ */
 const FormBundle = ({ record, idx, setBundle, setVisible }) => {
-  const [data, setData] = useState(record);
 
-  useEffect(() => {
-    setData(record)
-  }, [record])
+  /**
+   * handle changes of state
+   * 
+   * @param {any} key 
+   * @param {any} val 
+   */
 
-  const handleChange = (key, val) => {
-    setData(state => {
-      return {
-        ...state,
-        [key]: val
-      }
-    })
-  }
+  console.log('Form bundle renderet')
 
   return (
     <div className={styles.bundleContainer}>
@@ -29,14 +30,17 @@ const FormBundle = ({ record, idx, setBundle, setVisible }) => {
           <br /><br />
         </div>
         <Form
-          onFinish={() => {
+          onFinish={value => {
             setBundle(state => state.map((val, i) => {
-              return i === idx ? data : val
+              return i === idx ? value : val
             }))
+            console.log('form bundle', value)
             setVisible(false)
           }}
         >
           <Form.Item
+            name='jenis'
+            initialValue={record.jenis}
             rules={[
               {
                 required: true,
@@ -44,16 +48,13 @@ const FormBundle = ({ record, idx, setBundle, setVisible }) => {
               },
             ]}
           >
-            <Select
-              placeholder='Jenis Surat'
-              defaultValue={data.jenis !== '' && data.jenis}
-              value={data.jenis}
-              onChange={val => handleChange('jenis', val)}
-            >
+            <Select placeholder='Jenis Surat' >
               {listOption.listJenisSurat.map(val => <Option value={val.value} > {val.text} </Option>)}
             </Select>
           </Form.Item>
           <Form.Item
+            name='penerima'
+            initialValue={record.penerima}
             rules={[
               {
                 required: true,
@@ -61,16 +62,13 @@ const FormBundle = ({ record, idx, setBundle, setVisible }) => {
               },
             ]}
           >
-            <Select
-              placeholder='Penerima Surat'
-              defaultValue={data.penerima !== '' && data.penerima}
-              value={data.penerima !== '' ? data.penerima : undefined}
-              onChange={val => handleChange('penerima', val)}
-            >
+            <Select placeholder='Penerima Surat'>
               {[{ value: 'internal', text: 'Internal' }, { value: 'eksternal', text: 'Eksternal' }].map(val => <Option value={val.value} > {val.text} </Option>)}
             </Select>
           </Form.Item>
           <Form.Item
+            name='namaPenerima'
+            initialValue={record.namaPenerima}
             rules={[
               {
                 required: true,
@@ -78,14 +76,11 @@ const FormBundle = ({ record, idx, setBundle, setVisible }) => {
               },
             ]}
           >
-            <Input
-              placeholder='Nama Penerima'
-              defaultValue={data.namaPenerima}
-              value={data.namaPenerima}
-              onChange={e => handleChange('namaPenerima', e.target.value)}
-            />
+            <Input placeholder='Nama Penerima' />
           </Form.Item>
           <Form.Item
+            name='hal'
+            initialValue={record.hal}
             rules={[
               {
                 required: true,
@@ -93,14 +88,11 @@ const FormBundle = ({ record, idx, setBundle, setVisible }) => {
               },
             ]}
           >
-            <Input
-              placeholder='Perihal'
-              defaultValue={data.hal}
-              value={data.hal}
-              onChange={e => handleChange('hal', e.target.value)}
-            />
+            <Input placeholder='Perihal' />
           </Form.Item>
           <Form.Item
+            name='lampiran'
+            initialValue={record.lampiran}
             rules={[
               {
                 required: true,
@@ -108,14 +100,11 @@ const FormBundle = ({ record, idx, setBundle, setVisible }) => {
               },
             ]}
           >
-            <Input
-              placeholder='Lampiran'
-              defaultValue={data.lampiran}
-              value={data.lampiran}
-              onChange={e => handleChange('lampiran', e.target.value)}
-            />
+            <Input placeholder='Lampiran' />
           </Form.Item>
           <Form.Item
+            name='keterangan'
+            initialValue={record.keterangan}
             rules={[
               {
                 required: true,
@@ -123,14 +112,11 @@ const FormBundle = ({ record, idx, setBundle, setVisible }) => {
               },
             ]}
           >
-            <Input
-              placeholder='Keterangan'
-              defaultValue={data.keterangan}
-              value={data.keterangan}
-              onChange={e => handleChange('keterangan', e.target.value)}
-            />
+            <Input placeholder='Keterangan' />
           </Form.Item>
-          <Form.Item name='link'
+          <Form.Item
+            name='link'
+            initialValue={record.link}
             rules={[
               {
                 required: true,
@@ -138,12 +124,7 @@ const FormBundle = ({ record, idx, setBundle, setVisible }) => {
               },
             ]}
           >
-            <Input
-              placeholder='Link File'
-              defaultValue={data.link}
-              value={data.link}
-              onChange={e => handleChange('link', e.target.value)}
-            />
+            <Input placeholder='Link File' />
           </Form.Item>
           <Form.Item>
             <div className={styles.bundleRight}>
@@ -163,12 +144,20 @@ const FormBundle = ({ record, idx, setBundle, setVisible }) => {
   )
 }
 
+/**
+ * display modal for editing each data
+ * 
+ * @param {object} param1 
+ */
+
 const BundleSurat = ({ setBundle, ...rest }) => {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false) // modal visibility
+
+  console.log('Bundle Surat Rendered');
 
   return (
     <>
-      <Button type='link' onClick={() => setVisible(true)}>Edit</Button>
+      <Button type='link' size={window.innerWidth < 768 && 'small'} onClick={() => setVisible(true)}>Edit</Button>
       <Modal
         title="Detail Surat"
         visible={visible}

@@ -1,4 +1,4 @@
-import BundleSurat from './bundle-surat';
+import BundleSurat from './bundle-surat/BundleSurat';
 
 export {BundleSurat};
 

@@ -1,7 +1,10 @@
-import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Login, MainDashboard } from '../../containers';
+import React from 'react'; // import React
+import { BrowserRouter, Route, Switch } from 'react-router-dom'; // import react-router-dom
+import { Login, MainDashboard } from '../../containers'; // import containers
 
+/**
+ * routing components with react-router-dom
+ */
 const Routing = () => {
   return (
     <BrowserRouter>

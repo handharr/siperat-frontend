@@ -1,4 +1,5 @@
-import Routing from './Routing';
+import Routing from './Routing/Routing';
+import { dummyData } from './dummy-data';
 import * as listOption from './list-option';
 
-export { Routing, listOption };
+export { Routing, listOption, dummyData };

@@ -1,14 +1,19 @@
-import React from 'react';
-import styles from './login.module.scss';
-import { Input, Form, Button, Avatar } from 'antd';
-import { ImageBundle } from '../../assets'
-import { useHistory } from 'react-router-dom';
-import BukuTamu from './components/buku-tamu/BukuTamu';
+import React from 'react'; // import React
+import styles from './login.module.scss'; // import scss stylesheet
+import { Input, Form, Button, Avatar } from 'antd'; // import antd components
+import { ImageBundle } from '../../assets' // import image
+import { useHistory } from 'react-router-dom'; // import react-router-dom components
+import BukuTamu from './components/buku-tamu/BukuTamu'; // import local components
 
-const { LogoBem } = ImageBundle
+const { LogoBem } = ImageBundle; // destructuring image
 
+
+/**
+ * display login form
+ */
 const Login = () => {
   let history = useHistory();
+  console.log('Login Rendered');
 
   return (
     <div className={styles.container}>
@@ -52,7 +57,7 @@ const Login = () => {
                 </Button>
             </Form.Item>
           </Form>
-          <div style={{width:205}}>
+          <div style={{ width: 205 }}>
             <BukuTamu />
           </div>
         </div>

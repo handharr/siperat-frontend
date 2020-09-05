@@ -1,12 +1,17 @@
-import React, { useState } from 'react'
-import { Modal, Button, Form, DatePicker, Input, message } from 'antd'
+import React, { useState } from 'react'; // import React
+import { Modal, Button, Form, DatePicker, Input, message } from 'antd' // import antd components
 import {
   SendOutlined
-} from '@ant-design/icons';
+} from '@ant-design/icons'; // import antd icon components
 
+
+/**
+ * Display form buku tamu
+ */
 const BukuTamu = () => {
   const [visible, setVisible] = useState(false);
   const [valid, setValid] = useState(false);
+  console.log('Buku Tamu Rendered');
 
   return (
     <>

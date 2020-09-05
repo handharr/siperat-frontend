@@ -1,14 +1,30 @@
-import React, { useState } from 'react';
-import styles from './pengajuansurat.module.scss';
-import { Form, Select, Input, Button, Table, message } from 'antd';
-import { listOption } from '../../../../configs';
+import React, { useState } from 'react'; // import React
+import styles from './pengajuansurat.module.scss'; // import scss stylesheet
+import { Form, Select, Input, Button, Table, message, Tooltip } from 'antd'; // import antd components
+import { listOption } from '../../../../configs'; //import configs
 import {
   PlusOutlined
-} from '@ant-design/icons';
-import BundleSurat from './components/bundle-surat/BundleSurat';
+} from '@ant-design/icons'; //import antd icon components
+import BundleSurat from './components/bundle-surat/BundleSurat'; // import local components
 
-const { Option } = Select;
+const { Option } = Select; // destructuring antd Select Component
 
+// default value of one data
+const defaultBundle = {
+  jenis: undefined,
+  penerima: undefined,
+  namaPenerima: '',
+  hal: '',
+  lampiran: '',
+  keterangan: '',
+  link: ''
+}
+
+/**
+ * component to replace expanded row rendering display some of data
+ * 
+ * @param {object} param 
+ */
 const expandedRowRender = (record) => {
   return (
     <div className={styles.expandedWrapper}>
@@ -40,50 +56,37 @@ const expandedRowRender = (record) => {
   )
 }
 
-const defaultBundle = {
-  jenis: undefined,
-  penerima: undefined,
-  namaPenerima: '',
-  hal: '',
-  lampiran: '',
-  keterangan: '',
-  link: ''
-}
-
-const PengajuanSurat = () => {
-  const [kontak, setKontak] = useState('');
-  const [pengirim, setPengirim] = useState('');
-  const [acara, setAcara] = useState('');
-  const [bundle, setBundle] = useState([]);
-
-  const columns = [
+const tableColumns = (setBundle) => {
+  return [
     {
       key: 'jenis',
       title: 'Jenis',
       dataIndex: 'jenis',
-      width: '20%'
+      width:150
     },
     {
       key: 'penerima',
       title: 'Penerima',
       dataIndex: 'penerima',
-      width: '20%'
+      width: 150
     },
     {
       key: 'namaPenerima',
       title: 'Nama Penerima',
       dataIndex: 'namaPenerima',
-      width: '20%'
+      width: 150
     },
     {
       key: 'link',
       title: 'Link',
       dataIndex: 'link',
+      width : 300
     },
     {
       key: 'action',
-      title: 'Action',
+      title: window.innerWidth > 768 ? 'Action' : 'Act',
       fixed: 'right',
+      width: window.innerWidth > 768 ? 100 : 50,
       render: (t, record, index) => {
         return (
           <>
@@ -91,6 +94,7 @@ const PengajuanSurat = () => {
             <Button
               type='link'
               danger
+              size={window.innerWidth < 768 && 'small'}
               onClick={() => { setBundle(state => state.filter((val, i) => i !== index)) }}
             >
               Delete
@@ -100,10 +104,20 @@ const PengajuanSurat = () => {
       }
     }
   ];
+}
+
+/**
+ * form and table for letter submission
+ */
+const PengajuanSurat = () => {
+  const [bundle, setBundle] = useState([]); // list of surat -> array of object
+  const [toolVisible, setToolVisible] = useState(false);
+
+  console.log('Pengajuan Surat Rendered');
 
   return (
     <div>
-      <p><b>User/Admin</b></p>
+      <p><b>User</b></p>
       <Form
         layout='vertical'
         onFinish={() => {
@@ -118,7 +132,8 @@ const PengajuanSurat = () => {
             }
             return empty ? message.error('Semua surat harus diisi!!') : message.success('Surat berhasil di kirim :)');
           } else {
-            message.error('Paling tidak masukkan 1 surat!!')
+            setToolVisible(true)
+            message.error('Paling tidak masukkan 1 surat!!');
           }
         }}
       >
@@ -139,7 +154,7 @@ const PengajuanSurat = () => {
         <Form.Item
           name="kontak"
           label="Kontak"
-          initialValue={kontak}
+          initialValue=''
           rules={[
             {
               required: true,
@@ -147,12 +162,12 @@ const PengajuanSurat = () => {
             },
           ]}
         >
-          <Input placeholder='WA/Id Line' value={kontak} onChange={e => setKontak(e.target.value)} />
+          <Input placeholder='WA/Id Line' />
         </Form.Item>
         <Form.Item
           name="pengirim"
           label="Pengirim"
-          initialValue={pengirim ? pengirim : null}
+          initialValue={undefined}
           rules={[
             {
               required: true,
@@ -162,8 +177,6 @@ const PengajuanSurat = () => {
         >
           <Select
             placeholder='Pilih Pengirim'
-            onChange={val => setPengirim(val)}
-            value={pengirim}
           >
             {listOption.listPengirim.map((val) => {
               return <Option value={val.value} > {val.text} </Option>
@@ -173,7 +186,7 @@ const PengajuanSurat = () => {
         <Form.Item
           name="acara"
           label="Acara"
-          initialValue={acara}
+          initialValue=''
           rules={[
             {
               required: true,
@@ -181,26 +194,30 @@ const PengajuanSurat = () => {
             },
           ]}
         >
-          <Input placeholder='Nama Acara' value={acara} onChange={e => setAcara(e.target.value)} />
+          <Input placeholder='Nama Acara' />
         </Form.Item>
         <Form.Item label='List Surat'>
           <div className={styles.divTambahSurat}>
-            <Button
-              type='primary'
-              icon={<PlusOutlined />}
-              onClick={() => {
-                setBundle(state => [...state, defaultBundle])
-              }}
-            >
-              Tambah Surat
+            <Tooltip title='Tambah Surat' visible={toolVisible} color='red' >
+              <Button
+                type='primary'
+                icon={<PlusOutlined />}
+                onClick={() => {
+                  setBundle(state => [...state, defaultBundle])
+                  setToolVisible(false)
+                }}
+              >
+                Tambah Surat
             </Button>
+            </Tooltip>
             <br /><br />
           </div>
           <Table
-            columns={columns}
+            columns={tableColumns(setBundle)}
             dataSource={bundle}
             pagination={false}
             expandable={{ expandedRowRender }}
+            scroll={window.innerWidth < 768 && { x: 1100 }}
           />
         </Form.Item>
         <Form.Item>

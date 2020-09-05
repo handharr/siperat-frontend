@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
-import styles from './main.module.scss';
-import { Menu, Layout } from 'antd';
-import { useHistory, Switch, Route } from 'react-router-dom';
-import { DaftarPengajuan, PengajuanSurat, DaftarSurat } from './components';
+import React, { useState } from 'react'; // import React
+import styles from './main.module.scss'; // import scss stylesheet
+import { Menu, Layout } from 'antd'; // import antd components
+import { useHistory, Switch, Route } from 'react-router-dom'; // import react-router
+import { DaftarPengajuan, PengajuanSurat, DaftarSurat } from './components'; // import local components
 import {
   OrderedListOutlined,
   UnorderedListOutlined,
   LogoutOutlined,
   FormOutlined,
-} from '@ant-design/icons';
+} from '@ant-design/icons'; // import antd icon components
 
-const { Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout; // destructuring Layout antd component
 
+/**
+ * display menu and content of dashboard
+ */
 const MainDashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
   let history = useHistory();
@@ -21,10 +24,12 @@ const MainDashboard = () => {
     setCollapsed(clsd)
   };
 
+  console.log('Main Dashboard Rendered');
+
   return (
     <div className={styles.container}>
       <Layout style={{ minHeight: '100vh' }}>
-        <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
+        <Sider breakpoint='md' collapsible collapsed={collapsed} onCollapse={onCollapse}>
           <div className={styles.logo} />
           <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
             <Menu.Item key="1" icon={<OrderedListOutlined />} onClick={() => history.push('/dashboard')}>

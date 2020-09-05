@@ -1,34 +1,54 @@
-import React, { useState, useEffect } from 'react'
-import { Modal, Button, Form, Input, Select } from 'antd';
+import React, { useState, useCallback } from 'react' // import React
+import { Modal, Button, Form, Input, Select, Tooltip } from 'antd'; // import antd components
 import {
   EditFilled,
-} from '@ant-design/icons';
+} from '@ant-design/icons'; // import antd icon components
 
-const { Option } = Select;
-const { TextArea } = Input;
+const { Option } = Select; // destructuring antd Select Component
+const { TextArea } = Input; // destructuring antd Input Component
 
-const DetailPengajuan = ({ datas, setDataSurat, idx, dataSurat }) => {
-  const [visible, setVisible] = useState(false);
-  const [status, setStatus] = useState('');
-  const [rev, setRev] = useState('');
-  const [nosurat, setNosurat] = useState('');
-  const [penerima, setPenerima] = useState('');
+/**
+ * modal display details of each data and form to edit it
+ * 
+ * @param {object} param1
+ */
+const DetailPengajuan = React.memo(({ datas: { nosurat, status, penerima }, setDataSurat, idx }) => {
+  const [visible, setVisible] = useState(false); // modal visibility
+  const [statusData, setStatusData] = useState(''); // status data
 
-  useEffect(() => {
-    setStatus(datas.status.status);
-    setRev(datas.status.revisi);
-    setNosurat(datas.nosurat);
-    setPenerima(datas.penerima);
-  }, [datas])
+  const send = useCallback(value => {
+    setDataSurat(state => state.map((val, i) => {
+      if (i === idx) {
+        return {
+          ...val,
+          status: {
+            ...val.status,
+            status: value.status,
+            revisi: value.revisi
+          },
+          nosurat: value.nosurat,
+          penerima: value.penerima
+        }
+      } else {
+        return val
+      }
+    }));
+    setVisible(false);
+    // console.log('detail pengajuan', value)
+  }, [setDataSurat, idx]);
+
+  console.log('Detail Pengajuan Rendered');
 
   return (
     <>
-      <Button
-        icon={<EditFilled />}
-        shape='circle'
-        size='small'
-        onClick={() => setVisible(true)}
-      />
+      <Tooltip placement='top' title='Lihat detail surat'>
+        <Button
+          icon={<EditFilled />}
+          shape='circle'
+          size='small'
+          onClick={() => setVisible(true)}
+        />
+      </Tooltip>
       <Modal
         title="Detail Surat"
         visible={visible}
@@ -40,32 +60,16 @@ const DetailPengajuan = ({ datas, setDataSurat, idx, dataSurat }) => {
         <div>
           <Form
             layout='vertical'
-            onFinish={() => {
-              setDataSurat(state => state.map((val, i) => {
-                if (i === idx) {
-                  return {
-                    ...val,
-                    status: {
-                      ...val.status,
-                      status: status,
-                      revisi: rev
-                    },
-                    nosurat: nosurat,
-                    penerima: penerima
-                  }
-                } else {
-                  return val
-                }
-              }))
-              setVisible(false)
-            }}
+            onFinish={send}
           >
             <Form.Item
               name="nosurat"
               label="Nomor Surat"
               initialValue={nosurat}
             >
-              <Input placeholder="Nomor Surat" value={nosurat} onChange={e => setNosurat(e.target.value)} />
+              <Input
+                placeholder="Nomor Surat"
+              />
             </Form.Item>
             <Form.Item
               name="penerima"
@@ -74,8 +78,6 @@ const DetailPengajuan = ({ datas, setDataSurat, idx, dataSurat }) => {
             >
               <Select
                 placeholder='Pilih'
-                onChange={val => setPenerima(val)}
-                value={penerima}
               >
                 <Option value="internal">Internal</Option>
                 <Option value="eksternal">Eksternal</Option>
@@ -84,22 +86,23 @@ const DetailPengajuan = ({ datas, setDataSurat, idx, dataSurat }) => {
             <Form.Item
               name="status"
               label="Status"
-              initialValue={status}
+              initialValue={status.status}
             >
               <Select
                 placeholder='Pilih'
-                onChange={val => setStatus(val)}
-                value={status}
+                onChange={val => setStatusData(val)}
               >
                 <Option value="Diterima">Terima</Option>
                 <Option value="Ditolak">Tolak</Option>
                 <Option value="Revisi">Revisi</Option>
+                <Option value="Proses">Proses</Option>
               </Select>
             </Form.Item>
             <Form.Item
               name="revisi"
               label="Revisi"
-              rules={status === 'Revisi' && [
+              initialValue={status.revisi}
+              rules={statusData === 'Revisi' && [
                 {
                   required: true,
                   message: 'Tuliskan revisi terlebih dahulu!',
@@ -107,9 +110,7 @@ const DetailPengajuan = ({ datas, setDataSurat, idx, dataSurat }) => {
               ]}
             >
               <TextArea
-                disabled={status !== 'Revisi'}
-                value={rev}
-                onChange={e => setRev(e.target.value)}
+                disabled={statusData !== 'Revisi'}
                 placeholder='Tambahkan Revisi'
                 autoSize={{ minRows: 4, maxRows: 8 }}
               />
@@ -124,7 +125,7 @@ const DetailPengajuan = ({ datas, setDataSurat, idx, dataSurat }) => {
       </Modal>
     </>
   )
-}
+})
 
 export default DetailPengajuan;
 

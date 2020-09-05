@@ -1,4 +1,4 @@
-import Login from './login';
-import MainDashboard from './main-dashboard';
+import Login from './login/Login';
+import MainDashboard from './main-dashboard/MainDashboard';
 
 export { Login, MainDashboard };
