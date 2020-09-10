@@ -39,92 +39,91 @@ const DetailPengajuan = React.memo(({ datas: { nosurat, status, penerima }, setD
 
   console.log('Detail Pengajuan Rendered');
 
-  return (
-    <>
-      <Tooltip placement='top' title='Lihat detail surat'>
-        <Button
-          icon={<EditFilled />}
-          shape='circle'
-          size='small'
-          onClick={() => setVisible(true)}
-        />
-      </Tooltip>
-      <Modal
-        title="Detail Surat"
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        footer={null}
-        style={{ top: 20 }}
-      >
-        <div>
-          <Form
-            layout='vertical'
-            onFinish={send}
+  return <>
+    <Tooltip placement='top' title='Lihat detail surat'>
+      <Button
+        icon={<EditFilled />}
+        shape='circle'
+        size='small'
+        onClick={() => setVisible(true)}
+      />
+    </Tooltip>
+    <Modal
+      title="Detail Surat"
+      visible={visible}
+      onOk={() => setVisible(false)}
+      onCancel={() => setVisible(false)}
+      footer={null}
+      style={{ top: 20 }}
+    >
+      <div>
+        <Form
+          layout='vertical'
+          onFinish={send}
+        >
+          <Form.Item
+            name="nosurat"
+            label="Nomor Surat"
+            initialValue={nosurat}
           >
-            <Form.Item
-              name="nosurat"
-              label="Nomor Surat"
-              initialValue={nosurat}
+            <Input
+              placeholder="Nomor Surat"
+            />
+          </Form.Item>
+          <Form.Item
+            name="penerima"
+            label="Penerima"
+            initialValue={penerima}
+          >
+            <Select
+              placeholder='Pilih'
             >
-              <Input
-                placeholder="Nomor Surat"
-              />
-            </Form.Item>
-            <Form.Item
-              name="penerima"
-              label="Penerima"
-              initialValue={penerima}
+              <Option value="internal">Internal</Option>
+              <Option value="eksternal">Eksternal</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            name="status"
+            label="Status"
+            initialValue={status.status}
+          >
+            <Select
+              placeholder='Pilih'
+              onChange={val => setStatusData(val)}
             >
-              <Select
-                placeholder='Pilih'
-              >
-                <Option value="internal">Internal</Option>
-                <Option value="eksternal">Eksternal</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name="status"
-              label="Status"
-              initialValue={status.status}
-            >
-              <Select
-                placeholder='Pilih'
-                onChange={val => setStatusData(val)}
-              >
-                <Option value="Diterima">Terima</Option>
-                <Option value="Ditolak">Tolak</Option>
-                <Option value="Revisi">Revisi</Option>
-                <Option value="Proses">Proses</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name="revisi"
-              label="Revisi"
-              initialValue={status.revisi}
-              rules={statusData === 'Revisi' && [
-                {
-                  required: true,
-                  message: 'Tuliskan revisi terlebih dahulu!',
-                },
-              ]}
-            >
-              <TextArea
-                disabled={statusData !== 'Revisi'}
-                placeholder='Tambahkan Revisi'
-                autoSize={{ minRows: 4, maxRows: 8 }}
-              />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" block>
-                Save
+              <Option value="Diterima">Terima</Option>
+              <Option value="Ditolak">Tolak</Option>
+              <Option value="Revisi">Revisi</Option>
+              <Option value="Proses">Proses</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            name="revisi"
+            label="Revisi"
+            initialValue={status.revisi}
+            rules={statusData === 'Revisi' && [
+              {
+                required: true,
+                message: 'Tuliskan revisi terlebih dahulu!',
+              },
+            ]}
+          >
+            <TextArea
+              disabled={statusData !== 'Revisi'}
+              placeholder='Tambahkan Revisi'
+              autoSize={{ minRows: 4, maxRows: 8 }}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block>
+              Save
                 </Button>
-            </Form.Item>
-          </Form>
-        </div>
-      </Modal>
-    </>
-  )
+          </Form.Item>
+        </Form>
+      </div>
+    </Modal>
+  </>
+
 })
 
 export default DetailPengajuan;

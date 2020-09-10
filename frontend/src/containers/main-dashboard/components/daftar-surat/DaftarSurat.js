@@ -9,42 +9,40 @@ import { dummyData } from '../../../../configs'; // import configs
  * @param {object} param1 destructuring
  */
 const expandedRowRender = ({ expand, status }) => {
-  return (
-    <div className={styles.expandedWrapper}>
-      <table>
-        <colgroup>
-          <col span='1' />
-          <col span='1' />
-        </colgroup>
-        <tbody>
-          <tr>
-            <td>Kepada</td>
-            <td>: {expand.kepada}</td>
-          </tr>
-          <tr>
-            <td>Lampiran</td>
-            <td>: {expand.lampiran}</td>
-          </tr>
-          <tr>
-            <td>Hal</td>
-            <td>: {expand.hal}</td>
-          </tr>
-          <tr>
-            <td>Keterangan</td>
-            <td>: {expand.keterangan}</td>
-          </tr>
-          <tr>
-            <td>Link</td>
-            <td>: {expand.link}</td>
-          </tr>
-          <tr>
-            <td valign='top' >Revisi</td>
-            <td>: {status.revisi}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  )
+  return <div className={styles.expandedWrapper}>
+    <table>
+      <colgroup>
+        <col span='1' />
+        <col span='1' />
+      </colgroup>
+      <tbody>
+        <tr>
+          <td>Kepada</td>
+          <td>: {expand.kepada}</td>
+        </tr>
+        <tr>
+          <td>Lampiran</td>
+          <td>: {expand.lampiran}</td>
+        </tr>
+        <tr>
+          <td>Hal</td>
+          <td>: {expand.hal}</td>
+        </tr>
+        <tr>
+          <td>Keterangan</td>
+          <td>: {expand.keterangan}</td>
+        </tr>
+        <tr>
+          <td>Link</td>
+          <td>: {expand.link}</td>
+        </tr>
+        <tr>
+          <td valign='top' >Revisi</td>
+          <td>: {status.revisi}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 }
 
 /**
@@ -64,12 +62,11 @@ const statusSurat = (val, tgl) => {
     color = 'warning'
   }
 
-  return (
-    <div className={styles.status}>
-      <Tag color={color}>{val}</Tag>
-      <p> {tgl} </p>
-    </div>
-  )
+  return <div className={styles.status}>
+    <Tag color={color}>{val}</Tag>
+    <p> {tgl} </p>
+  </div>
+
 }
 
 /**
@@ -136,17 +133,15 @@ const DaftarSurat = () => {
 
   console.log('Daftar Surat Rendered');
 
-  return (
-    <div>
-      <p><b>User</b></p>
-      <Table
-        dataSource={data}
-        columns={columns}
-        expandable={{ expandedRowRender }}
-        scroll={{ x: 1275 }}
-      />
-    </div>
-  )
+  return <div>
+    <p><b>User</b></p>
+    <Table
+      dataSource={data}
+      columns={columns}
+      expandable={{ expandedRowRender }}
+      scroll={{ x: 1275 }}
+    />
+  </div>
 }
 
 export default DaftarSurat;

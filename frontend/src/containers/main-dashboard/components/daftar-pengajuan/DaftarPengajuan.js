@@ -17,14 +17,21 @@ import { dummyData, listOption } from '../../../../configs'; // import configs
 const status = (val, tgl) => {
   let color = '';
 
-  if (val === 'Diterima') {
-    color = 'success'
-  } else if (val === 'Ditolak') {
-    color = 'error'
-  } else if (val === 'Revisi') {
-    color = 'warning'
-  } else {
-    color = 'processing'
+  switch (val) {
+    case 'Diterima':
+      color = 'success';
+      break;
+    case 'Ditolak':
+      color = 'error';
+      break;
+    case 'Revisi':
+      color = 'warning';
+      break;
+    case 'Proses':
+      color = 'processing'
+      break;
+    default:
+      color = ''
   }
 
   return (
@@ -100,6 +107,7 @@ const tableColumns = (setDataSurat) => {
       width: 100,
       fixed: window.innerWidth > 768 ? 'left' : null,
       render: record => status(record.status, record.tgl),
+      // render: record => <statusSurat val={record.status} tgl={record.tgl} />,
       onFilter: (val, { status }) => val === status.status,
       filters: [
         { value: 'Diterima', text: 'Diterima' },
